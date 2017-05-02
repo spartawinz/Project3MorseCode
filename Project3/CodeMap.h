@@ -2,8 +2,6 @@
 #include "stdafx.h"
 #include "Binary_Tree.h"
 #include "BTNode.h"
-#include "Binary_Search_Tree.h"
-#include "Syntax_Error.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -31,7 +29,7 @@ private:
 	std::string inputSection;
 	std::vector<std::string> letters;
 	std::vector<std::string> code;
-	Binary_Search_Tree<std::string> morseTree;
+	Binary_Tree<std::string> morseTree;
 	BTNode<std::string>* root = new BTNode<std::string>("");
 	BTNode<std::string>* currentNode;
 	BTNode<std::string>* newNode;
