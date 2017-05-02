@@ -30,6 +30,7 @@ void CodeMap::encode(string message)
 {
 	vector<string> splitMessage = split(message);
 	vector<string> result;
+	// searches the map and pushes the result in the vector for output
 	for (int i = 0; i < splitMessage.size(); i++)
 	{
 		map<string, string>::const_iterator itr = CodesEncode.find(splitMessage[i]);
@@ -50,6 +51,7 @@ void CodeMap::decode(string message)
 	vector<string> splitMessage = split(message);
 	vector<string> result;
 	char temp[20];
+	// traverses the tree and pushes the result in the result
 	for (int i = 0; i < splitMessage.size(); i++)
 	{
 		currentNode = root;
@@ -133,6 +135,7 @@ void CodeMap::initialize()
 
 vector<string> CodeMap::split(string message)
 {
+	// basically the string tokenizer but pushes them into a vector of strings instead
 	vector<string> result;
 	string hold = message;
 	string temp;
