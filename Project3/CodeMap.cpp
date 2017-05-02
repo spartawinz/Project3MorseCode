@@ -1,5 +1,9 @@
+
 #include "stdafx.h"
+#include "BTNode.h"
 #include "CodeMap.h"
+#include "Binary_Search_Tree.h"
+#include "Binary_Tree.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -22,7 +26,7 @@ void CodeMap::loadCodes()
 	}
 }
 // encode/decode
-void CodeMap::encode(string& message)
+void CodeMap::encode(string message)
 {
 	vector<string> splitMessage = split(message);
 	vector<string> result;
@@ -45,25 +49,32 @@ void CodeMap::decode(string message)
 {
 	vector<string> splitMessage = split(message);
 	vector<string> result;
-	
+	char temp[20];
 	for (int i = 0; i < splitMessage.size(); i++)
 	{
-		map<string, string>::const_iterator itr = CodesDecode.find(splitMessage[i]);
-		if (itr != CodesDecode.end())
-			result.push_back(itr->first);
-		else
+		currentNode = root;
+		strcpy_s(temp, splitMessage[i].c_str());
+		for (int j = 0; j < splitMessage[i].length(); j++)
 		{
-			cout << "item not in map.";
-			throw exception("oops! wrong input.");
+			if (temp[j] == '_')
+				currentNode = currentNode->right;
+			if (temp[j] == '.')
+				currentNode = currentNode->left;
 		}
+		result.push_back(currentNode->data);
 	}
 	for (int i = 0; i < result.size(); i++)
-		cout << result[i] << " ";
+	{
+		cout << result[i];
+	}
 	cout << "\n";
 }
 // reads file and puts it into vectors
 void CodeMap::initialize()
 {
+	// morse tree initialization
+	morseTree.setRoot(root);
+	currentNode = morseTree.getRoot();
 	// opens file
 	input.open("morse.txt");
 	if (input.fail())
@@ -81,6 +92,7 @@ void CodeMap::initialize()
 		code.push_back(inputSection.substr(1, inputSection.length() - 1));
 		delete[] hold;
 	}
+	// pushes nodes onto vectors depending on length
 	for (int i = 1; i <= 4; i++)
 	{
 		for (int j = 0; j < letters.size(); j++)
@@ -91,6 +103,31 @@ void CodeMap::initialize()
 				Data2Be.push_back(code[j]);
 			}
 		}
+	}
+	char temp[20];
+	for (int i = 0; i < Nodes2Be.size(); i++)
+	{
+		strcpy_s(temp, Data2Be[i].c_str());
+		// cycles through the nodes till it gets to the last row
+		for (int j = 0; j < Data2Be[i].size()-1; j++)
+		{
+			if (temp[j] == '_')
+				currentNode = currentNode->right;
+			if (temp[j] == '.')
+				currentNode = currentNode->left;
+		}
+		//creates a new node with the data
+		newNode = new BTNode<string>(Nodes2Be[i]);
+		//places the data in the left or the right
+		if (temp[Data2Be[i].size() - 1] == '_')
+		{
+			currentNode->right = newNode;
+		}
+		if (temp[Data2Be[i].size() - 1] == '.')
+		{
+			currentNode->left = newNode;
+		}
+		currentNode = root;
 	}
 }
 
@@ -106,5 +143,6 @@ vector<string> CodeMap::split(string message)
 		hold.erase(0, pos + 1);
 		result.push_back(temp);
 	}
+	result.push_back(hold);
 	return result;
 }
